@@ -69,6 +69,7 @@ function GridStatusHeals:OnEnable()
 	-- register callbacks
 	HealComm.RegisterCallback(self, "HealComm_DirectHealStart")
 	HealComm.RegisterCallback(self, "HealComm_DirectHealStop")
+	HealComm.RegisterCallback(self, "HealComm_DirectHealInterrupt")
 	HealComm.RegisterCallback(self, "HealComm_DirectHealDelayed")
 	HealComm.RegisterCallback(self, "HealComm_HealModifierUpdate")
 end
@@ -76,6 +77,7 @@ end
 function GridStatusHeals:OnDisable()
 	HealComm.UnregisterCallback(self, "HealComm_DirectHealStart")
 	HealComm.UnregisterCallback(self, "HealComm_DirectHealStop")
+	HealComm.UnregisterCallback(self, "HealComm_DirectHealInterrupt")
 	HealComm.UnregisterCallback(self, "HealComm_DirectHealDelayed")
 	HealComm.UnregisterCallback(self, "HealComm_HealModifierUpdate")
 end
@@ -101,6 +103,12 @@ function GridStatusHeals:HealComm_DirectHealStart(event, healerFullName, healSiz
 end
 
 function GridStatusHeals:HealComm_DirectHealStop(event, healerFullName, healSize, succeeded, ...)
+	--set healSize to zero to make track of ownHeals easier
+	--remember this in case you nead the healsize in the future
+	self:HandleIncomingHeal(healerFullName, 0, ...)
+end
+
+function GridStatusHeals:HealComm_DirectHealInterrupt(event, healerFullName, healSize, succeeded, ...)
 	--set healSize to zero to make track of ownHeals easier
 	--remember this in case you nead the healsize in the future
 	self:HandleIncomingHeal(healerFullName, 0, ...)
